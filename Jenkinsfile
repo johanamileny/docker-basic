@@ -2,26 +2,49 @@ pipeline {
     agent any
 
     tools {
-        dotnet 'dotnet-9'
+        dotnetsdk 'dotnet-9'
+        nodejs 'node-22'
     }
 
     stages {
-        stage('Build') {
+        stage('Restore'){
             steps {
-                echo 'Building...'
-                sh 'dotnet --version'
-                // Add your build steps here
-            }
-        stage('Test') {
-            steps {
-                echo 'Testing...'
-                // Add your test steps here
+                dir('10-net9-remix-pg-env/Backend') {
+                    echo 'Restoring dependencies...'
+                    sh 'dotnet restore'
+                }
             }
         }
-        stage('Deploy') {
+        stage('Test'){
             steps {
-                echo 'Deploying...'
-                // Add your deployment steps here
+                dir('10-net9-remix-pg-env/Backend') {
+                    echo 'Running tests...'
+                    sh 'dotnet test --no-build --verbosity normal'
+                }
+            }
+        }
+        stage('Build'){
+            steps {
+                dir('10-net9-remix-pg-env/Backend') {
+                    echo 'Building the project...'
+                    sh 'dotnet build --configuration Release --no-restore'
+                }
+            }
+        }  
+        stage('Publish'){
+            steps {
+                dir('10-net9-remix-pg-env/Backend') {
+                    echo 'Publishing the project...'
+                    sh 'dotnet publish --configuration Release --no-build -o ./publish'
+                }
+            }
+        } 
+        stage('Nodejs version'){
+            steps {
+                script {
+                    sh 'node -v'
+                    sh 'npm -v'
+                }
             }
         }
     }
@@ -31,5 +54,4 @@ pipeline {
             echo 'This will always run after the stages.'
         }
     }
-}
 }
