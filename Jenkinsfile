@@ -1,15 +1,12 @@
 pipeline {
     agent any
 
-    tools {
-        dotnetsdk 'dotnet-9'
-        nodejs 'node-22'
-    }
+   
 
     environment {
-        DOTNET_ROOT = "${tool 'dotnet-9'}"
-        PATH = "${env.PATH}:${tool 'node-22'}/bin"
-    }
+    DOTNET_ROOT = "/usr/share/dotnet"
+    PATH = "${env.PATH}:/usr/share/dotnet:/usr/local/bin"
+}
 
     stages {
         stage('Check versions') {
