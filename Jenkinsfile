@@ -5,25 +5,25 @@ pipeline {
         dotnetsdk 'dotnet-9'
         nodejs 'node-22'
     }
+
     environment {
-        DOTNET_ROOT = "${env.PATH}:${tool 'dotnet-9'}/bin"
+        DOTNET_ROOT = "${tool 'dotnet-9'}"
         PATH = "${env.PATH}:${tool 'node-22'}/bin"
     }
 
     stages {
-        stage('Check versions'){
+        stage('Check versions') {
             steps {
-                script {
-                    echo 'Node.js version:' 
-                    sh 'node -v'
-                    echo 'NPM version:'
-                    sh 'npm -v'
-                    echo 'Dotnet version:'
-                    sh 'dotnet --version'
-                }
+                echo 'Node.js version:' 
+                sh 'node -v'
+                echo 'NPM version:'
+                sh 'npm -v'
+                echo 'Dotnet version:'
+                sh 'dotnet --version'
             }
         }
-        stage('Backend - Restore'){
+
+        stage('Backend - Restore') {
             steps {
                 dir('10-net9-remix-pg-env/Backend') {
                     echo 'Restoring dependencies...'
@@ -32,18 +32,20 @@ pipeline {
             }
         }
 
-
-        stage('Backend - Static Analysis'){Add commentMore actions
+        stage('Backend - Static Analysis') {
             steps {
                 dir('10-net9-remix-pg-env/Backend') {
                     echo 'Running static analysis...'
-                    sh 'dotnet sonarscanner begin /k:"Docker-Basic" /d:sonar.host.url="http://localhost:9000" /d:sonar.login="squ_612aaa1af4d032e732923ac391ebd8a24a3a56d2"'
-                    sh 'dotnet build'Add commentMore actions
-                    sh 'dotnet sonarscanner end /d:sonar.login="squ_612aaa1af4d032e732923ac391ebd8a24a3a56d2"'
+                    sh '''
+                        dotnet sonarscanner begin /k:"Docker-Basic" /d:sonar.host.url="http://localhost:9000" /d:sonar.login="squ_612aaa1af4d032e732923ac391ebd8a24a3a56d2"
+                        dotnet build
+                        dotnet sonarscanner end /d:sonar.login="squ_612aaa1af4d032e732923ac391ebd8a24a3a56d2"
+                    '''
                 }
             }
         }
-        stage('Backend - Test'){
+
+        stage('Backend - Test') {
             steps {
                 dir('10-net9-remix-pg-env/Backend') {
                     echo 'Running tests...'
@@ -51,24 +53,26 @@ pipeline {
                 }
             }
         }
-        stage('Backend - Build'){
+
+        stage('Backend - Build') {
             steps {
                 dir('10-net9-remix-pg-env/Backend') {
                     echo 'Building the project...'
                     sh 'dotnet build --configuration Release --no-restore'
                 }
             }
-        }  
-        stage('Backend - Publish'){
+        }
+
+        stage('Backend - Publish') {
             steps {
                 dir('10-net9-remix-pg-env/Backend') {
                     echo 'Publishing the project...'
                     sh 'dotnet publish --configuration Release --no-build -o ./publish'
                 }
             }
-            
-        } 
-        stage('Frontend - Install'){
+        }
+
+        stage('Frontend - Install') {
             steps {
                 dir('10-net9-remix-pg-env/Frontend') {
                     echo 'Installing dependencies...'
@@ -76,23 +80,26 @@ pipeline {
                 }
             }
         }
-    stage('Frontend - Test'){
-            steps {Add commentMore actions
+
+        stage('Frontend - Test') {
+            steps {
                 dir('10-net9-remix-pg-env/Frontend') {
                     echo 'Running tests...'
                     sh 'npm test'
                 }
             }
         }
-    stage('Backend - Code Coverage'){
+
+        stage('Backend - Code Coverage') {
             steps {
                 dir('10-net9-remix-pg-env/Backend') {
                     echo 'Running code coverage...'
-                    sh 'dotnet test --collect:"XPlat Code Coverage" --no-build --verbosity normal'Add commentMore actions
+                    sh 'dotnet test --collect:"XPlat Code Coverage" --no-build --verbosity normal'
                 }
             }
-        }    
-        stage('Frontend - Build'){
+        }
+
+        stage('Frontend - Build') {
             steps {
                 dir('10-net9-remix-pg-env/Frontend') {
                     echo 'Building the project...'
@@ -101,12 +108,12 @@ pipeline {
             }
         }
     }
-    }
-    
+
     post {
         always {
             echo 'This will always run after the stages.'
         }
     }
+}
 
 
