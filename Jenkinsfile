@@ -1,13 +1,17 @@
 pipeline {
     agent any
 
+    tools {
+        dotnet 'dotnet-9'
+    }
+
     stages {
         stage('Build') {
             steps {
                 echo 'Building...'
+                sh 'dotnet --version'
                 // Add your build steps here
             }
-        }
         stage('Test') {
             steps {
                 echo 'Testing...'
@@ -27,4 +31,5 @@ pipeline {
             echo 'This will always run after the stages.'
         }
     }
+}
 }
