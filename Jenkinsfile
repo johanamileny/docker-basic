@@ -14,8 +14,7 @@ pipeline {
         stage('Check versions'){
             steps {
                 script {
-                    sh 'echo $PATH'
-                    echo 'Node.js version:'
+                    echo 'Node.js version:' 
                     sh 'node -v'
                     echo 'NPM version:'
                     sh 'npm -v'
@@ -24,7 +23,7 @@ pipeline {
                 }
             }
         }
-        stage('Restore'){
+        stage('Backend - Restore'){
             steps {
                 dir('10-net9-remix-pg-env/Backend') {
                     echo 'Restoring dependencies...'
@@ -32,7 +31,7 @@ pipeline {
                 }
             }
         }
-        stage('Test'){
+        stage('Backend - Test'){
             steps {
                 dir('10-net9-remix-pg-env/Backend') {
                     echo 'Running tests...'
@@ -40,7 +39,7 @@ pipeline {
                 }
             }
         }
-        stage('Build'){
+        stage('Backend - Build'){
             steps {
                 dir('10-net9-remix-pg-env/Backend') {
                     echo 'Building the project...'
@@ -48,22 +47,25 @@ pipeline {
                 }
             }
         }  
-        stage('Publish'){
+        stage('Backend - Publish'){
             steps {
                 dir('10-net9-remix-pg-env/Backend') {
                     echo 'Publishing the project...'
                     sh 'dotnet publish --configuration Release --no-build -o ./publish'
                 }
             }
+            
         } 
-        stage('Nodejs version'){
+        stage('Frontend - Install'){
             steps {
-                script {
-                    sh 'node -v'
-                    sh 'npm -v'
+                dir('10-net9-remix-pg-env/Frontend') {
+                    echo 'Installing dependencies...'
+                    sh 'npm install'
                 }
             }
         }
+    }
+    
     }
 
     post {
@@ -71,5 +73,5 @@ pipeline {
             echo 'This will always run after the stages.'
         }
     }
-}
+
 
