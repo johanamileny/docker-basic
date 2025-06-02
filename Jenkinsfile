@@ -64,10 +64,25 @@ pipeline {
                 }
             }
         }
+    stage('Frontend - Test'){
+            steps {Add commentMore actions
+                dir('10-net9-remix-pg-env/Frontend') {
+                    echo 'Running tests...'
+                    sh 'npm test'
+                }
+            }
+        }
+        stage('Frontend - Build'){
+            steps {
+                dir('10-net9-remix-pg-env/Frontend') {
+                    echo 'Building the project...'
+                    sh 'npm run build'
+                }
+            }
+        }
+    }
     }
     
-    }
-
     post {
         always {
             echo 'This will always run after the stages.'
