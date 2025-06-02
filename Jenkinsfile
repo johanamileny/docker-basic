@@ -31,6 +31,18 @@ pipeline {
                 }
             }
         }
+
+
+        stage('Backend - Static Analysis'){Add commentMore actions
+            steps {
+                dir('10-net9-remix-pg-env/Backend') {
+                    echo 'Running static analysis...'
+                    sh 'dotnet sonarscanner begin /k:"Docker-Basic" /d:sonar.host.url="http://localhost:9000" /d:sonar.login="squ_612aaa1af4d032e732923ac391ebd8a24a3a56d2"'
+                    sh 'dotnet build'Add commentMore actions
+                    sh 'dotnet sonarscanner end /d:sonar.login="squ_612aaa1af4d032e732923ac391ebd8a24a3a56d2"'
+                }
+            }
+        }
         stage('Backend - Test'){
             steps {
                 dir('10-net9-remix-pg-env/Backend') {
@@ -72,6 +84,14 @@ pipeline {
                 }
             }
         }
+    stage('Backend - Code Coverage'){
+            steps {
+                dir('10-net9-remix-pg-env/Backend') {
+                    echo 'Running code coverage...'
+                    sh 'dotnet test --collect:"XPlat Code Coverage" --no-build --verbosity normal'Add commentMore actions
+                }
+            }
+        }    
         stage('Frontend - Build'){
             steps {
                 dir('10-net9-remix-pg-env/Frontend') {
