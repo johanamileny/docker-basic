@@ -1,11 +1,17 @@
 pipeline {
     agent any
-
+    
+    tools {
+        nodejs 'node-20.19.2'
+        dotnetsdk 'dotnet-9.0.203'
+    }
    
-
     environment {
-    DOTNET_ROOT = "/usr/share/dotnet"
-    PATH = "${env.PATH}:/usr/share/dotnet:/usr/local/bin"
+       
+        PATH = "${env.PATH}:/home/server3/.dotnet/tools"
+        SONARQUBE_URL = 'http://192.168.1.57:9000'
+        SONARQUBE_TOKEN = 'squ_612aaa1af4d032e732923ac391ebd8a24a3a56d2'
+    
 }
 
     stages {
