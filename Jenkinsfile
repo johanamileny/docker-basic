@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     tools {
         nodejs 'node-20.19.2'
         dotnetsdk 'dotnet-9.0.203'
@@ -15,6 +15,13 @@ pipeline {
 }
 
     stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/johanamileny/docker-basic.git', branch: 'main'
+            }
+        }
+
+
         stage('Check versions') {
             steps {
                 echo 'Node.js version:' 
@@ -92,6 +99,7 @@ pipeline {
                 }
             }
         }
+        
 
         stage('Backend - Code Coverage') {
             steps {
