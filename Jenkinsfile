@@ -8,7 +8,7 @@ pipeline {
    
     environment {
        
-        PATH = "${env.PATH}:/root/.dotnet/tools"
+        PATH = "${env.PATH}:/root/server3/.dotnet/tools"
         SONARQUBE_URL = 'http://192.168.1.57:9000'
         SONARQUBE_TOKEN = 'squ_612aaa1af4d032e732923ac391ebd8a24a3a56d2'
     
