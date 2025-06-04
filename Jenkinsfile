@@ -15,13 +15,7 @@ pipeline {
 }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git url: 'https://github.com/johanamileny/docker-basic.git', branch: 'main'
-            }
-        }
-
-
+        
         stage('Check versions') {
             steps {
                 echo 'Node.js version:' 
